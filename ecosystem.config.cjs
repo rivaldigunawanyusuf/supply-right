@@ -9,6 +9,7 @@ module.exports = {
       env: {
         NODE_ENV: "production",
         PORT: 38410,
+        BACKEND_PORT: 38410,
       },
       max_memory_restart: "1G",
       error_file: "./logs/backend-err.log",

@@ -3,7 +3,9 @@ import { createServer } from './api/server.js';
 
 dotenv.config();
 
-const port = process.env.BACKEND_PORT ? parseInt(process.env.BACKEND_PORT, 10) : 3001;
+const port = process.env.PORT 
+  ? parseInt(process.env.PORT, 10) 
+  : (process.env.BACKEND_PORT ? parseInt(process.env.BACKEND_PORT, 10) : 3001);
 const agentPrivateKey = process.env.AGENT_PRIVATE_KEY;
 const rpcUrl = process.env.SEPOLIA_RPC_URL;
 
