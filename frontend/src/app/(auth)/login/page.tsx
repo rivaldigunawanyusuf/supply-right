@@ -70,53 +70,77 @@ export default function LoginPage() {
     }
   };
 
-  const handlePersonaSelect = async (personaRole: UserRole) => {
+  const handlePersonaSelect = async (personaRole: UserRole, targetPath?: string) => {
     setLoading(true);
     const success = await loginAsPersona(personaRole);
     setLoading(false);
     if (success) {
-      router.push('/dashboard');
+      router.push(targetPath || '/dashboard');
     }
   };
 
   const personaMeta: Record<
     UserRole,
-    { title: string; subtitle: string; desc: string; Icon: React.ComponentType<{ className?: string }>; badgeClass: string }
+    {
+      title: string;
+      subtitle: string;
+      desc: string;
+      Icon: React.ComponentType<{ className?: string }>;
+      badgeClass: string;
+      btnLabel: string;
+      btnClass: string;
+      targetPath: string;
+    }
   > = {
     BUYER: {
       title: 'Elena Ramos',
       subtitle: 'BrightBox Consumer Goods',
       desc: 'SME Buyer ordering goods, logging dock receipts, and triggering autonomous shortfall recovery.',
       Icon: Package,
-      badgeClass: 'bg-primary/10 text-primary border-primary/20'
+      badgeClass: 'bg-primary/10 text-primary border-primary/20',
+      btnLabel: 'Launch Buyer Desk',
+      btnClass: 'bg-primary hover:bg-primary/90 text-primary-foreground',
+      targetPath: '/dashboard',
     },
     SUPPLIER: {
       title: 'Marcus Chen',
       subtitle: 'PackagePro Domestic',
       desc: 'Packaging Manufacturer accepting contract terms, minting SupplyRightNFT, and logging shipments.',
       Icon: Factory,
-      badgeClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
+      badgeClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+      btnLabel: 'Launch Supplier Desk',
+      btnClass: 'bg-amber-600 hover:bg-amber-700 text-white',
+      targetPath: '/dashboard',
     },
     PROVIDER: {
       title: 'Sarah Jenkins',
       subtitle: 'Sentinel Protection Vault',
       desc: 'Institutional risk provider locking mETH collateral and automatically receiving refunds on settlement.',
       Icon: Shield,
-      badgeClass: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20'
+      badgeClass: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
+      btnLabel: 'Launch Underwriter Vault',
+      btnClass: 'bg-purple-600 hover:bg-purple-700 text-white',
+      targetPath: '/dashboard',
     },
     VERIFIER: {
       title: 'Captain David Meyer',
       subtitle: 'SGS Global Logistics Inspection',
       desc: 'Accredited physical verifier attesting shortfall quantity without exposure to autonomous signing keys.',
       Icon: Search,
-      badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+      badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+      btnLabel: 'Launch Inspector Station',
+      btnClass: 'bg-emerald-600 hover:bg-emerald-700 text-white',
+      targetPath: '/dashboard',
     },
     JUDGE: {
       title: 'Hackathon Evaluator',
       subtitle: 'Topic F Benchmark Inspector',
       desc: 'Unrestricted access to run prompt-injection attacks, 10 security test vectors, and simulate edge cases.',
       Icon: Scale,
-      badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
+      badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
+      btnLabel: 'Enter Security Lab',
+      btnClass: 'bg-rose-600 hover:bg-rose-700 text-white',
+      targetPath: '/security-lab',
     }
   };
 
@@ -196,11 +220,11 @@ export default function LoginPage() {
               return (
                 <button
                   key={r}
-                  onClick={() => handlePersonaSelect(r)}
+                  onClick={() => handlePersonaSelect(r, meta.targetPath)}
                   disabled={loading}
-                  className="bg-card hover:bg-muted/40 border border-border hover:border-primary/40 rounded-xl p-5 text-left transition-all shadow-sm hover:shadow-md flex flex-col justify-between space-y-3 group"
+                  className="bg-card hover:bg-muted/40 border border-border hover:border-primary/40 rounded-xl p-5 text-left transition-all shadow-sm hover:shadow-md flex flex-col justify-between space-y-4 group"
                 >
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="p-2 rounded-lg bg-muted text-foreground">
                         <IconComp className="w-4 h-4 text-primary" />
@@ -220,9 +244,12 @@ export default function LoginPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-primary pt-2 border-t border-border/50">
-                    <span>Launch Role Workspace</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <div className="pt-3 border-t border-border/50 flex items-center justify-between">
+                    <span className="text-[11px] font-medium text-muted-foreground">Workstation</span>
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-transform group-hover:scale-[1.02] ${meta.btnClass}`}>
+                      <span>{meta.btnLabel}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
                   </div>
                 </button>
               );
@@ -231,7 +258,7 @@ export default function LoginPage() {
             {/* Special Judge Evaluator Card */}
             <div className="sm:col-span-2">
               <button
-                onClick={() => handlePersonaSelect('JUDGE')}
+                onClick={() => handlePersonaSelect('JUDGE', '/security-lab')}
                 disabled={loading}
                 className="w-full bg-card hover:bg-rose-500/5 border border-rose-500/30 hover:border-rose-500/50 rounded-xl p-5 text-left transition-all shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
               >
@@ -252,7 +279,7 @@ export default function LoginPage() {
                   </p>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-rose-600 text-white text-xs font-bold shadow-sm self-start sm:self-auto flex-shrink-0">
+                <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm self-start sm:self-auto flex-shrink-0 transition-transform group-hover:scale-[1.02]">
                   <span>Enter Security Lab</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>

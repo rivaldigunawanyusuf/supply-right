@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useViewMode } from '@/context/ViewModeContext';
+import { Toast } from '@/components/Toast';
 import { PurchaseOrder, SystemState, PolicyVerdict, AgentAssessment } from '@/types';
 
 export default function OrderWorkspacePage() {
@@ -53,6 +54,12 @@ export default function OrderWorkspacePage() {
   const [thoughtLogs, setThoughtLogs] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [activePipelineStage, setActivePipelineStage] = useState<number>(0);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3500);
+  };
 
   // Supplier Form State
   const [shipUnits, setShipUnits] = useState('2000');
@@ -238,6 +245,22 @@ export default function OrderWorkspacePage() {
         })
       });
       fetchOrderDetails();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Reset order workflow for testing stations from any role
+  const handleResetOrder = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/reset', { method: 'POST' });
+      if (res.ok) {
+        showToast('System state reset to clean seed fixture. Workstations ready for simulation.');
+        await fetchOrderDetails();
+      }
+    } catch {
+      showToast('Failed to reset state');
     } finally {
       setLoading(false);
     }
@@ -621,20 +644,31 @@ export default function OrderWorkspacePage() {
               </div>
               <p className="text-[11.5px] text-muted-foreground mt-0.5">
                 {activeRole === 'BUYER' &&
-                  'Your assigned workstation is Buyer Dock Intake. Record incoming physical receipt units to trigger automated loss claims.'}
+                  'Your primary workstation is Buyer Dock Intake. You can record physical dock receipts, verify 80% shortfall, and trigger autonomous settlement.'}
                 {activeRole === 'SUPPLIER' &&
-                  'Your assigned workstation is Supplier Station. Accept purchase order terms and submit dispatch tracking with commercial invoices.'}
+                  'Your primary workstation is Supplier Station. You can accept purchase order terms, log shipments, and factor trade receivables.'}
                 {activeRole === 'PROVIDER' &&
-                  'Your assigned workstation is Underwriter Vault. Stake 20% performance escrow collateral to activate protection and earn 1.5% APY yield.'}
+                  'Your primary workstation is Underwriter Vault. You can lock 20% mETH collateral to activate escrow coverage and earn APY yield.'}
                 {activeRole === 'VERIFIER' &&
-                  'Your assigned workstation is Logistics Inspector. Review carrier bills of lading and issue cryptographic loss attestations on-chain.'}
+                  'Your primary workstation is Logistics Inspector. You can review bills of lading and issue cryptographic shortfall attestations.'}
                 {activeRole === 'JUDGE' &&
                   'Full multi-party execution authority enabled. You can operate any workstation or trigger the Autonomous Settlement Engine.'}
               </p>
             </div>
           </div>
-          <div className="text-right text-[11px] text-muted-foreground shrink-0 hidden md:block">
-            Switch role anytime via TopBar
+          <div className="flex items-center gap-2.5 self-start sm:self-auto shrink-0">
+            <button
+              onClick={handleResetOrder}
+              disabled={loading}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-foreground text-xs font-semibold shadow-sm transition disabled:opacity-50"
+              title="Reset PO-2026-001 back to initial state to test any role workstation from scratch"
+            >
+              <RotateCcw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              <span>Reset PO Workflow</span>
+            </button>
+            <div className="text-right text-[11px] text-muted-foreground shrink-0 hidden lg:block">
+              Switch role anytime via TopBar
+            </div>
           </div>
         </div>
       </div>
@@ -643,7 +677,8 @@ export default function OrderWorkspacePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Supplier Shipment Station */}
         <div
-          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all ${
+          id="supplier-station"
+          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all scroll-mt-24 ${
             activeRole === 'SUPPLIER'
               ? 'ring-2 ring-amber-500 border-amber-500/80 bg-amber-500/5 shadow-md'
               : 'border-border'
@@ -734,7 +769,8 @@ export default function OrderWorkspacePage() {
 
         {/* Buyer Warehouse Intake */}
         <div
-          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all ${
+          id="buyer-dock"
+          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all scroll-mt-24 ${
             activeRole === 'BUYER'
               ? 'ring-2 ring-primary border-primary/80 bg-primary/5 shadow-md'
               : 'border-border'
@@ -791,7 +827,8 @@ export default function OrderWorkspacePage() {
 
         {/* Trade Credit Underwriter */}
         <div
-          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all ${
+          id="underwriter-vault"
+          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all scroll-mt-24 ${
             activeRole === 'PROVIDER'
               ? 'ring-2 ring-purple-500 border-purple-500/80 bg-purple-500/5 shadow-md'
               : 'border-border'
@@ -845,7 +882,8 @@ export default function OrderWorkspacePage() {
 
         {/* Independent Logistics Inspector */}
         <div
-          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all ${
+          id="verifier-station"
+          className={`bg-card rounded-xl border shadow-sm p-5 flex flex-col justify-between space-y-4 transition-all scroll-mt-24 ${
             activeRole === 'VERIFIER'
               ? 'ring-2 ring-emerald-500 border-emerald-500/80 bg-emerald-500/5 shadow-md'
               : 'border-border'
@@ -912,7 +950,7 @@ export default function OrderWorkspacePage() {
       </div>
 
       {/* Autonomous Settlement Command Center & 7 Policy Gates */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div id="settlement-engine" className="grid grid-cols-1 lg:grid-cols-12 gap-6 scroll-mt-24">
         {/* 6-Stage Autonomous AI Execution Loop */}
         <div className="lg:col-span-6 bg-card rounded-xl border border-border shadow-sm p-6 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-border">
@@ -1131,6 +1169,8 @@ export default function OrderWorkspacePage() {
           </div>
         </div>
       )}
+
+      {toastMsg && <Toast message={toastMsg} onClose={() => setToastMsg(null)} />}
     </div>
   );
 }

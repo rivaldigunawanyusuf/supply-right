@@ -71,9 +71,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
     return pathname === itemPath;
   };
 
+  const getRoleWorkspaceConfig = () => {
+    switch (activeRole) {
+      case 'BUYER':
+        return { label: 'Dock Intake & Claims', anchor: '#buyer-dock' };
+      case 'SUPPLIER':
+        return { label: 'Fulfillment & Factoring', anchor: '#supplier-station' };
+      case 'PROVIDER':
+        return { label: 'Vault Collateral Reserves', anchor: '#underwriter-vault' };
+      case 'VERIFIER':
+        return { label: 'SGS Quality Attestation', anchor: '#verifier-station' };
+      case 'JUDGE':
+      default:
+        return { label: 'Order Workspace (All Roles)', anchor: '#settlement-engine' };
+    }
+  };
+
+  const roleWs = getRoleWorkspaceConfig();
+
   const mainNav = [
     { label: 'Overview & Orders', path: '/dashboard', icon: LayoutDashboard },
-    { label: 'Order Workspace', path: '/orders/PO-2026-001', icon: FileSpreadsheet },
+    { label: roleWs.label, path: `/orders/PO-2026-001${roleWs.anchor}`, icon: FileSpreadsheet },
     { label: 'Create Purchase Order', path: '/orders/new', icon: PlusCircle },
   ];
 
