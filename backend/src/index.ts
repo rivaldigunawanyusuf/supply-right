@@ -1,7 +1,13 @@
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 import { createServer } from './api/server.js';
 
 dotenv.config();
+const parentEnv = path.resolve(process.cwd(), '../.env');
+if (fs.existsSync(parentEnv)) {
+  dotenv.config({ path: parentEnv });
+}
 
 const port = process.env.PORT 
   ? parseInt(process.env.PORT, 10) 

@@ -310,7 +310,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
             </div>
             <div className="min-w-0">
               <div className="text-xs font-bold text-foreground truncate">
-                {user?.name || 'Alice Walker'}
+                {user?.name || 'Elena Ramos'}
               </div>
               <div className="text-[10px] text-muted-foreground truncate">
                 {user?.email || 'buyer@brightbox.io'}

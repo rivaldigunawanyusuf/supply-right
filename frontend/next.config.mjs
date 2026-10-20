@@ -1,4 +1,4 @@
-const backendPort = process.env.BACKEND_PORT || '3001';
+const backendPort = process.env.BACKEND_PORT || (process.env.NODE_ENV === 'production' ? '38410' : '3001');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
