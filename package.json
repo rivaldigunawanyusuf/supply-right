@@ -1,0 +1,24 @@
+{
+  "name": "supply-right-ai",
+  "version": "1.0.0",
+  "description": "SupplyRight AI — Autonomous On-Chain Protection & Settlement Engine for SMEs",
+  "scripts": {
+    "start": "./start.sh",
+    "test:contracts": "export PATH=\"$PATH:$HOME/.foundry/bin\" && cd contracts && forge test -vv",
+    "test:backend": "cd backend && npm test",
+    "test:all": "npm run test:contracts && npm run test:backend",
+    "build": "cd backend && npm run build && cd ../frontend && npm run build",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && npm start"
+  },
+  "keywords": [
+    "autonomous-wallet",
+    "ethereum-sepolia",
+    "ai-agent",
+    "policy-gate",
+    "fintechathon-2026"
+  ],
+  "author": "SupplyRight AI Team",
+  "license": "MIT"
+}

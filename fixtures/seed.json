@@ -1,0 +1,79 @@
+{
+  "purchaseOrder": {
+    "id": "PO-2026-001",
+    "buyer": {
+      "name": "BrightBox Consumer Goods (Test)",
+      "wallet": "0x_BUYER_ADDRESS",
+      "role": "buyer"
+    },
+    "supplier": {
+      "name": "PackagePro Domestic (Test)",
+      "contact": "supplier@example-test.com",
+      "role": "supplier"
+    },
+    "product": {
+      "description": "Custom-printed outer packaging boxes",
+      "type": "non-food-contact custom outer packaging",
+      "specifications": "Full-color printed corrugated cardboard, 300x200x150mm"
+    },
+    "quantity": {
+      "ordered": 10000,
+      "batches": 50,
+      "perBatch": 200,
+      "unit": "boxes"
+    },
+    "deadline": "2026-10-15T00:00:00Z",
+    "contractDate": "2026-09-01T00:00:00Z",
+    "totalValue": "100000000000000000000",
+    "totalValueDisplay": "100 mETH"
+  },
+  "deliveryEvidence": {
+    "deliveredBatches": 10,
+    "deliveredQuantity": 2000,
+    "deliveryDate": "2026-10-14T18:00:00Z",
+    "shortfallBatches": 40,
+    "shortfallQuantity": 8000,
+    "shortfallPercentage": 80,
+    "evidenceHash": "0x_EVIDENCE_DOCUMENT_HASH",
+    "evidenceNotes": "Warehouse receipt confirms 10 of 50 batches received. Remaining 40 batches not delivered by deadline.",
+    "inspectionDate": "2026-10-16T09:00:00Z"
+  },
+  "protection": {
+    "eligibleLoss": "80000000000000000000",
+    "eligibleLossDisplay": "80 mETH",
+    "coverageRate": 20,
+    "collateral": "20000000000000000000",
+    "collateralDisplay": "20 mETH",
+    "expectedPayout": "16000000000000000000",
+    "expectedPayoutDisplay": "16 mETH",
+    "remainingCollateral": "4000000000000000000",
+    "remainingCollateralDisplay": "4 mETH"
+  },
+  "parties": {
+    "registrar": {
+      "wallet": "0x_REGISTRAR_ADDRESS",
+      "role": "registrar"
+    },
+    "provider": {
+      "name": "ShieldVault Capital (Test)",
+      "wallet": "0x_PROVIDER_ADDRESS",
+      "role": "provider"
+    },
+    "verifier": {
+      "name": "Independent Claims Review (Test)",
+      "wallet": "0x_VERIFIER_ADDRESS",
+      "role": "verifier"
+    },
+    "agent": {
+      "wallet": "0x_AGENT_ADDRESS",
+      "role": "agent"
+    }
+  },
+  "chain": {
+    "name": "Ethereum Sepolia",
+    "chainId": 11155111,
+    "rpcUrl": "from .env",
+    "explorerUrl": "https://sepolia.etherscan.io"
+  },
+  "disclaimer": "This is a demonstration using mock tokens (mETH) on Ethereum Sepolia testnet. No real monetary value is involved. This is not insurance, payment, or legal settlement."
+}
