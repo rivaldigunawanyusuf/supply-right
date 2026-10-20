@@ -11,8 +11,9 @@
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "start:backend": "cd backend && npm start",
-    "seed": "npm --prefix backend run seed:dev",
-    "seed:reset": "npm --prefix backend run seed:dev -- --reset"
+    "seed": "npm --prefix backend run seed",
+    "seed:dev": "npm --prefix backend run seed:dev",
+    "seed:reset": "npm --prefix backend run seed -- --reset"
   },
   "keywords": [
     "autonomous-wallet",

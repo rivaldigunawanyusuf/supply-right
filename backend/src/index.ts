@@ -9,6 +9,16 @@ if (fs.existsSync(parentEnv)) {
   dotenv.config({ path: parentEnv });
 }
 
+process.on('uncaughtException', (err) => {
+  console.error('[FATAL] Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[FATAL] Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
 const port = process.env.PORT 
   ? parseInt(process.env.PORT, 10) 
   : (process.env.BACKEND_PORT ? parseInt(process.env.BACKEND_PORT, 10) : 3001);
@@ -20,7 +30,7 @@ const { app, signer } = createServer({
   rpcUrl
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`\n======================================================`);
   console.log(` SupplyRight AI — Backend & Policy Engine Service`);
   console.log(`======================================================`);
@@ -30,4 +40,13 @@ app.listen(port, () => {
   console.log(` SSE Stream: http://localhost:${port}/api/events/stream`);
   console.log(` Audit Trail: http://localhost:${port}/api/audit`);
   console.log(`======================================================\n`);
+});
+
+server.on('error', (err: any) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`[FATAL] Port ${port} is already in use by another process!`);
+  } else {
+    console.error(`[FATAL] Server listen error:`, err);
+  }
+  process.exit(1);
 });
